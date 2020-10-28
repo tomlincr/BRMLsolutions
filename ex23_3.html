@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0106)https://wrprod01-prod-useast1.mathworks.com/static/JHQwWRC6/MATLAB%20Drive/My%20Solutions/html/ex23_3.html -->
+<html wtx-context="CEA17B5E-F579-4AD7-90B1-BE9DC4AEF3F2"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ex23_3</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-10-28"><meta name="DC.source" content="ex23_3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> ex23_3
+<span class="comment">% Modified from DEMOHMMINFERENCESIMPLE</span>
+import <span class="string">brml.*</span>
+
+H = 3; <span class="comment">% number of Hidden states</span>
+V = 2; <span class="comment">% number of Visible states</span>
+T = 3; <span class="comment">% length of the time-series</span>
+
+<span class="comment">% setup the HMM</span>
+phghm = [0.5 0 0; 0.3 0.6 0; 0.2 0.4 1];<span class="comment">% transition matrix p(h(t)|h(t-1))</span>
+pvgh = [0.7 0.4 0.8; 0.3 0.6 0.2];<span class="comment">% emission matrix p(v(t)|h(t))</span>
+ph1 = [0.9; 0.1; 0.0]; <span class="comment">% initial p(h) NB must be as col, hence ; separators</span>
+v = [1 2 1]; <span class="comment">% initial observations vector</span>
+
+disp(<span class="string">'4. Filtering: p(h(3)|v(1:3))'</span>)
+[alpha,loglik]=HMMforward(v,phghm,ph1,pvgh); <span class="comment">% Returns: normalised alphas, log likelihood</span>
+alphaH3 = alpha(1:3,3) <span class="comment">% normalised</span>
+
+disp(<span class="string">'2. Smoothing: p(h(1)|v(1:3))'</span>)
+beta=HMMbackward(v,phghm,pvgh);
+[phtgV1T,phthtpgV1T]=HMMsmooth(alpha,beta,pvgh,phghm,v);
+    <span class="comment">% Outputs:</span>
+        <span class="comment">% phtgV1T : smoothed posterior p(h(t)|v(1:T))</span>
+        <span class="comment">% phthtpgV1T : smoothed pair p(h(t),h(t+1)|v(1:T))</span>
+ph1gV13 = phtgV1T(1:3,1) <span class="comment">% p(h(1)|v(1:T)) is all rows 1:3 (1:T), 1st col (h1)</span>
+ph3gV13 = phtgV1T(1:3,3) <span class="comment">% alternate method of filtering</span>
+ph3gV13 == alphaH3; <span class="comment">% notice the same</span>
+
+gamma=HMMgamma(alpha,phghm); <span class="comment">% alternative alpha-gamma (RTS) method, seems to correspond to smoothed answer</span>
+
+disp(<span class="string">'1. Likelihood: p(v(1:3))'</span>)
+likelihood = exp(loglik) <span class="comment">% need to exponentiate to get likelihood</span>
+
+disp(<span class="string">'3. Most probable hidden state seq. argmax_h1:3p(h(1:3)|v(1:3)) = Viterbi'</span>)
+
+[maxstate logprob]=HMMviterbi(v,phghm,ph1,pvgh); <span class="comment">% most likely joint state</span>
+maxstate
+</pre><pre class="codeoutput">4. Filtering: p(h(3)|v(1:3))
+
+alphaH3 =
+
+    0.2150
+    0.2731
+    0.5119
+
+2. Smoothing: p(h(1)|v(1:3))
+
+ph1gV13 =
+
+    0.9309
+    0.0691
+    0.0000
+
+
+ph3gV13 =
+
+    0.2150
+    0.2731
+    0.5119
+
+1. Likelihood: p(v(1:3))
+
+likelihood =
+
+    0.1538
+
+3. Most probable hidden state seq. argmax_h1:3p(h(1:3)|v(1:3)) = Viterbi
+
+maxstate =
+
+     1     2     3
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB® R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function ex23_3
+% Modified from DEMOHMMINFERENCESIMPLE
+import brml.* 
+
+H = 3; % number of Hidden states
+V = 2; % number of Visible states
+T = 3; % length of the time-series
+
+% setup the HMM
+phghm = [0.5 0 0; 0.3 0.6 0; 0.2 0.4 1];% transition matrix p(h(t)|h(t-1))
+pvgh = [0.7 0.4 0.8; 0.3 0.6 0.2];% emission matrix p(v(t)|h(t))
+ph1 = [0.9; 0.1; 0.0]; % initial p(h) NB must be as col, hence ; separators
+v = [1 2 1]; % initial observations vector
+
+disp('4. Filtering: p(h(3)|v(1:3))')
+[alpha,loglik]=HMMforward(v,phghm,ph1,pvgh); % Returns: normalised alphas, log likelihood
+alphaH3 = alpha(1:3,3) % normalised
+
+disp('2. Smoothing: p(h(1)|v(1:3))')
+beta=HMMbackward(v,phghm,pvgh);
+[phtgV1T,phthtpgV1T]=HMMsmooth(alpha,beta,pvgh,phghm,v);
+    % Outputs:
+        % phtgV1T : smoothed posterior p(h(t)|v(1:T))
+        % phthtpgV1T : smoothed pair p(h(t),h(t+1)|v(1:T))
+ph1gV13 = phtgV1T(1:3,1) % p(h(1)|v(1:T)) is all rows 1:3 (1:T), 1st col (h1)
+ph3gV13 = phtgV1T(1:3,3) % alternate method of filtering
+ph3gV13 == alphaH3; % notice the same
+
+gamma=HMMgamma(alpha,phghm); % alternative alpha-gamma (RTS) method, seems to correspond to smoothed answer
+
+disp('1. Likelihood: p(v(1:3))')
+likelihood = exp(loglik) % need to exponentiate to get likelihood
+
+disp('3. Most probable hidden state seq. argmax_h1:3p(h(1:3)|v(1:3)) = Viterbi')
+
+[maxstate logprob]=HMMviterbi(v,phghm,ph1,pvgh); % most likely joint state
+maxstate
+##### SOURCE END #####
+--></body></html>
